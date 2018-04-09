@@ -495,7 +495,7 @@ class HTML(BaseParser):
                reload: bool = True,
                timeout: Union[float, int] = 8.0,
                keep_page: bool = False,
-               pyppeteer_args: dict = {}):
+               pyppeteer_args: dict = None):
         """Reloads the response in Chromium, and replaces HTML content
         with an updated version, with JavaScript executed.
 
@@ -543,6 +543,9 @@ class HTML(BaseParser):
         Warning: the first time you run this method, it will download
         Chromium into your home directory (``~/.pyppeteer``).
         """
+        if pyppeteer_args is None:
+            pyppeteer_args = {}
+
         async def _async_render(*, url: str, script: str = None, scrolldown, sleep: int, wait: float, reload,
                                 content: Optional[str], timeout: Union[float, int], keep_page: bool):
             try:
@@ -684,7 +687,9 @@ class HTMLSession(requests.Session):
 
         return HTMLResponse._from_response(r, self)
 
-    def get_browser(self, pyppeteer_args):
+    def get_browser(self, pyppeteer_args=None):
+        if pyppeteer_args is None:
+            pyppeteer_args = {}
         if not hasattr(self, "_browser"):
             self.loop = asyncio.get_event_loop()
             self._browser = self.loop.run_until_complete(pyppeteer.launch(headless=True,
