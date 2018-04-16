@@ -594,7 +594,9 @@ class HTML(BaseParser):
             if not content:
                 try:
 
-                    content, result, page = self.session.loop.run_until_complete(_async_render(url=self.url, script=script, sleep=sleep, wait=wait, content=self.html, reload=reload, scrolldown=scrolldown, timeout=timeout, keep_page=keep_page))
+                    content, result, page = self.session.loop.run_until_complete(
+                        _async_render(url=self.url, script=script, sleep=sleep, wait=wait, content=self.html,
+                                      reload=reload, scrolldown=scrolldown, timeout=timeout, keep_page=keep_page))
                 except TypeError:
                     pass
             else:
@@ -692,9 +694,12 @@ class HTMLSession(requests.Session):
             pyppeteer_args = {}
         if not hasattr(self, "_browser"):
             self.loop = asyncio.get_event_loop()
-            self._browser = self.loop.run_until_complete(pyppeteer.launch(headless=True,
-                                                                          args=['--no-sandbox'],
-                                                                          **pyppeteer_args))
+            browser_args = {
+                'headless': True,
+                'args': ['--no-sandbox']
+            }
+            browser_args.update(pyppeteer_args)
+            self._browser = self.loop.run_until_complete(pyppeteer.launch(**browser_args))
         return self._browser
 
     def close(self):
