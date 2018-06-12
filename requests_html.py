@@ -408,7 +408,8 @@ class HTML(BaseParser):
     :param default_encoding: Which encoding to default to.
     """
 
-    def __init__(self, *, session: Union['HTTPSession', 'AsyncHTMLSession'] = None, url: str = DEFAULT_URL, html: _HTML, default_encoding: str = DEFAULT_ENCODING) -> None:
+    def __init__(self, *, session: Union['HTTPSession', 'AsyncHTMLSession'] = None,
+                 url: str = DEFAULT_URL, html: _HTML, default_encoding: str = DEFAULT_ENCODING) -> None:
 
         # Convert incoming unicode HTML into bytes.
         if isinstance(html, str):
@@ -538,7 +539,7 @@ class HTML(BaseParser):
             {'width': 800, 'height': 600, 'deviceScaleFactor': 1}
 
         Warning: If you use keep_page, you're responsable for closing each page, since
-        opening to many at scale may crach the browser.
+        opening too many at scale may crash the browser.
 
         Warning: the first time you run this method, it will download
         Chromium into your home directory (``~/.pyppeteer``).
