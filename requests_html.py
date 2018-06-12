@@ -700,7 +700,10 @@ class HTMLSession(requests.Session):
                 'args': ['--no-sandbox']
             }
             browser_args.update(pyppeteer_args)
-            self._browser = self.loop.run_until_complete(pyppeteer.launch(**browser_args))
+            if 'browserWSEndpoint' in browser_args:
+                self._browser = self.loop.run_until_complete(pyppeteer.connect(**browser_args))
+            else:
+                self._browser = self.loop.run_until_complete(pyppeteer.launch(**browser_args))
         return self._browser
 
     def close(self):
